@@ -57,18 +57,35 @@ PluginError Plugin::Load(void **ppData) {
 	if (!filename_.empty()) {
 		return Load(filename_, ppData);
 	}
-	return PLUGIN_ERROR_LOAD;
+	return PLGUIN_ERROR_FAILED;
 }
 
 PluginError Plugin::Load(const std::string &filename, void **ppData) {
 	if (!loaded_) {
-		#ifdef _WIN32
+		#ifdef WIN32
 			handle_ = (void*)LoadLibrary(filename.c_str());
 		#else
 			handle_ = dlopen(filename.c_str(), RTLD_NOW);
 		#endif
 		if (handle_ == 0) {
-			return PLUGIN_ERROR_LOAD;
+			#ifdef WIN32
+				DWORD error = GetLastError();
+				DWORD flags = FORMAT_MESSAGE_ARGUMENT_ARRAY
+				            | FORMAT_MESSAGE_FROM_SYSTEM
+				            | FORMAT_MESSAGE_ALLOCATE_BUFFER
+				            | FORMAT_MESSAGE_IGNORE_INSERTS
+				            ;
+				DWORD lang = LANG_SYSTEM_DEFAULT;
+				LPSTR text = NULL;
+				if (FormatMessageA(flags, NULL, error, lang, (LPSTR)&text, 0, NULL) != 0) {
+					failmsg_.assign(text);
+					failmsg_.erase(failmsg_.length() - 2, 2); // remove trailing \r\n
+					LocalFree((HLOCAL)text);
+				}
+			#else
+				failmsg_.assign(dlerror());
+			#endif
+			return PLGUIN_ERROR_FAILED;
 		}
 		Supports_t Supports = (Supports_t)GetSymbol("Supports");
 		if (Supports != 0) {
@@ -107,7 +124,7 @@ PluginError Plugin::Load(const std::string &filename, void **ppData) {
 			}
 		}
 	}
-	return PLUGIN_ERROR_LOAD;
+	return PLGUIN_ERROR_FAILED;
 }
 
 void Plugin::Unload() {

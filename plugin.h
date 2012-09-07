@@ -31,7 +31,7 @@
 
 enum PluginError {
 	PLUGIN_ERROR_OK,
-	PLUGIN_ERROR_LOAD,
+	PLGUIN_ERROR_FAILED,
 	PLUGIN_ERROR_VERSION,
 	PLUGIN_ERROR_API
 };
@@ -61,6 +61,10 @@ public:
 	operator bool() const
 		{ return IsLoaded(); }
 
+	std::string GetFailMessage() const {
+		return failmsg_;
+	}
+
 	int AmxLoad(AMX *amx) const;
 	int AmxUnload(AMX *amx) const;
 	void ProcessTick() const;
@@ -73,6 +77,7 @@ private:
 	std::string filename_;
 	void *handle_;
 	bool loaded_;
+	std::string failmsg_;
 
 	AmxLoad_t AmxLoad_;
 	AmxUnload_t AmxUnload_;

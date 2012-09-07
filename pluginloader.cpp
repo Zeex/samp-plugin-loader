@@ -73,7 +73,6 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 
 		Plugin *plugin = new Plugin;
 		if (plugin == 0) {
-			logprintf("   Failed.");
 			continue;
 		}
 
@@ -86,11 +85,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 		}
 
 		if (!plugin->IsLoaded()) {
-			delete plugin;
-
 			switch (error) {
-				case PLUGIN_ERROR_LOAD: {
-					logprintf("   Failed.");
+				case PLGUIN_ERROR_FAILED: {
+					std::string msg = plugin->GetFailMessage();
+					if (!msg.empty()) {
+						logprintf("   Failed (%s)", msg.c_str());
+					} else {
+						logprintf("   Failed.");
+					}
 					break;
 				}
 				case PLUGIN_ERROR_VERSION:
@@ -101,6 +103,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 					break;
 			}
 
+			delete plugin;
 			continue;
 		}
 
