@@ -73,6 +73,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 
 		Plugin *plugin = new Plugin;
 		if (plugin == 0) {
+			logprintf("   Failed.");
 			continue;
 		}
 
