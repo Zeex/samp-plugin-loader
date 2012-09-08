@@ -57,7 +57,7 @@ PluginError Plugin::Load(void **ppData) {
 	if (!filename_.empty()) {
 		return Load(filename_, ppData);
 	}
-	return PLGUIN_ERROR_FAILED;
+	return PLUGIN_ERROR_FAILED;
 }
 
 PluginError Plugin::Load(const std::string &filename, void **ppData) {
@@ -85,7 +85,7 @@ PluginError Plugin::Load(const std::string &filename, void **ppData) {
 			#else
 				failmsg_.assign(dlerror());
 			#endif
-			return PLGUIN_ERROR_FAILED;
+			return PLUGIN_ERROR_FAILED;
 		}
 		Supports_t Supports = (Supports_t)GetSymbol("Supports");
 		if (Supports != 0) {
@@ -124,7 +124,7 @@ PluginError Plugin::Load(const std::string &filename, void **ppData) {
 			}
 		}
 	}
-	return PLGUIN_ERROR_FAILED;
+	return PLUGIN_ERROR_FAILED;
 }
 
 void Plugin::Unload() {

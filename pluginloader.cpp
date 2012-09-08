@@ -86,7 +86,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 
 		if (!plugin->IsLoaded()) {
 			switch (error) {
-				case PLGUIN_ERROR_FAILED: {
+				case PLUGIN_ERROR_FAILED: {
 					std::string msg = plugin->GetFailMessage();
 					if (!msg.empty()) {
 						logprintf("   Failed (%s)", msg.c_str());
