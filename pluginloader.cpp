@@ -46,6 +46,13 @@ static void **ppPluginData;
 
 static std::list<Plugin*> plugins;
 
+static bool EndsWith(const std::string &s1, const std::string &s2) {
+	if (s1.length() >= s2.length()) {
+		return (s1.compare(s1.length() - s2.length(), s2.length(), s2) == 0);
+	}
+	return false;
+}
+
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() {
 	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
 }
@@ -73,8 +80,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 		PluginError error = plugin->Load(path, ppPluginData);
 
 		if (!plugin->IsLoaded()) {
-			path.append(PLUGIN_EXT);
-			error = plugin->Load(path, ppPluginData);
+			if (!EndsWith(path, PLUGIN_EXT)) {
+				path.append(PLUGIN_EXT);
+				error = plugin->Load(path, ppPluginData);
+			}
 		}
 
 		if (!plugin->IsLoaded()) {
