@@ -59,24 +59,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
 	std::stringstream name_stream;
 	name_stream << server_cfg.GetOption("my_plugins", std::string());
 
-	std::list<std::string> names;
-
-	std::copy(
-		std::istream_iterator<std::string>(name_stream),
-		std::istream_iterator<std::string>(),
-		std::back_inserter(names)
-	);
-
-	for (std::list<std::string>::iterator iterator = names.begin(); iterator != names.end(); ++iterator) {
-		std::string &name = *iterator;
-		logprintf("  Loading plugin: %s", name.c_str());
+	std::istream_iterator<std::string> names_end;
+	for (std::istream_iterator<std::string> iterator(name_stream);
+			iterator != names_end; ++iterator) {
+		logprintf("  Loading plugin: %s", iterator->c_str());
 
 		Plugin *plugin = new Plugin;
 		if (plugin == 0) {
 			continue;
 		}
 
-		std::string path = "plugins/" + name;
+		std::string path = "plugins/" + *iterator;
 		PluginError error = plugin->Load(path, ppPluginData);
 
 		if (!plugin->IsLoaded()) {
