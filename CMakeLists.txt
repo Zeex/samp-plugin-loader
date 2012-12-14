@@ -1,20 +1,20 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(pluginloader)
+project(loader)
 
 set(SOURCES 
 	configreader.cpp
 	configreader.h
 	plugin.cpp
 	plugin.h
-	pluginloader.cpp
+	loader.cpp
 )
 
 if(WIN32)
-	list(APPEND SOURCES pluginloader.def)
+	list(APPEND SOURCES loader.def)
 endif()
 
-add_library(pluginloader MODULE ${SOURCES})
+add_library(loader MODULE ${SOURCES})
 
 if(WIN32)
 	if(MSVC)
@@ -23,11 +23,11 @@ if(WIN32)
 else()
 	add_definitions(-DLINUX)
 
-	set_target_properties(pluginloader PROPERTIES PREFIX "")
+	set_target_properties(loader PROPERTIES PREFIX "")
 
 	find_library(LIBDL_PATH NAMES dl)
 	if(LIBDL_PATH)
-		target_link_libraries(pluginloader ${LIBDL_PATH})
+		target_link_libraries(loader ${LIBDL_PATH})
 	endif()
 endif()
 
