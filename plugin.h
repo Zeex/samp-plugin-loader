@@ -31,58 +31,57 @@
 #include "sdk/amx/amx.h"
 
 enum PluginError {
-	PLUGIN_ERROR_OK,
-	PLUGIN_ERROR_FAILED,
-	PLUGIN_ERROR_VERSION,
-	PLUGIN_ERROR_API
+  PLUGIN_ERROR_OK,
+  PLUGIN_ERROR_FAILED,
+  PLUGIN_ERROR_VERSION,
+  PLUGIN_ERROR_API
 };
 
 class Plugin {
-public:
-	typedef unsigned int (PLUGIN_CALL *Supports_t)();
-	typedef bool (PLUGIN_CALL *Load_t)(void **ppData);
-	typedef void (PLUGIN_CALL *Unload_t)();
-	typedef int (PLUGIN_CALL *AmxLoad_t)(AMX *amx);
-	typedef int (PLUGIN_CALL *AmxUnload_t)(AMX *amx);
-	typedef void (PLUGIN_CALL *ProcessTick_t)();
+ public:
+  typedef unsigned int (PLUGIN_CALL *Supports_t)();
+  typedef bool (PLUGIN_CALL *Load_t)(void **ppData);
+  typedef void (PLUGIN_CALL *Unload_t)();
+  typedef int (PLUGIN_CALL *AmxLoad_t)(AMX *amx);
+  typedef int (PLUGIN_CALL *AmxUnload_t)(AMX *amx);
+  typedef void (PLUGIN_CALL *ProcessTick_t)();
 
-	Plugin();
-	explicit Plugin(const std::string &filename);
-	Plugin(const std::string &filename, void **ppData);
-	~Plugin();
+  Plugin();
+  explicit Plugin(const std::string &filename);
+  Plugin(const std::string &filename, void **ppData);
+  ~Plugin();
 
-	PluginError Load(void **ppData);
-	PluginError Load(const std::string &filename, void **ppData);
-	void Unload();
+  PluginError Load(void **ppData);
+  PluginError Load(const std::string &filename, void **ppData);
+  void Unload();
 
-	void *GetSymbol(const std::string &name) const;
+  void *GetSymbol(const std::string &name) const;
 
-	bool IsLoaded() const
-		{ return loaded_; }
-	operator bool() const
-		{ return IsLoaded(); }
+  bool IsLoaded() const
+    { return loaded_; }
+  operator bool() const
+    { return IsLoaded(); }
 
-	std::string GetFailMessage() const {
-		return failmsg_;
-	}
+  std::string GetFailMessage() const {
+    return failmsg_;
+  }
 
-	int AmxLoad(AMX *amx) const;
-	int AmxUnload(AMX *amx) const;
-	void ProcessTick() const;
+  int AmxLoad(AMX *amx) const;
+  int AmxUnload(AMX *amx) const;
+  void ProcessTick() const;
 
-private:
-	// Disable copying
-	Plugin(const Plugin &other);
-	Plugin &operator=(const Plugin &other);
+ private:
+  std::string filename_;
+  void *handle_;
+  bool loaded_;
+  std::string failmsg_;
+  AmxLoad_t AmxLoad_;
+  AmxUnload_t AmxUnload_;
+  ProcessTick_t ProcessTick_;
 
-	std::string filename_;
-	void *handle_;
-	bool loaded_;
-	std::string failmsg_;
-
-	AmxLoad_t AmxLoad_;
-	AmxUnload_t AmxUnload_;
-	ProcessTick_t ProcessTick_;
+ private:
+  Plugin(const Plugin &other);
+  Plugin &operator=(const Plugin &other);
 };
 
 #endif // UNLIMIITEDFS_PLUGIN_H

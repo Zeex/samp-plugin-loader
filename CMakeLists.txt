@@ -3,31 +3,31 @@ cmake_minimum_required(VERSION 2.8)
 project(loader)
 
 set(SOURCES 
-	configreader.cpp
-	configreader.h
-	plugin.cpp
-	plugin.h
-	loader.cpp
+  configreader.cpp
+  configreader.h
+  plugin.cpp
+  plugin.h
+  loader.cpp
 )
 
 if(WIN32)
-	list(APPEND SOURCES loader.def)
+  list(APPEND SOURCES loader.def)
 endif()
 
 add_library(loader MODULE ${SOURCES})
 
 if(WIN32)
-	if(MSVC)
-		add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-	endif()
+  if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  endif()
 else()
-	add_definitions(-DLINUX)
+  add_definitions(-DLINUX)
 
-	set_target_properties(loader PROPERTIES PREFIX "")
+  set_target_properties(loader PROPERTIES PREFIX "")
 
-	find_library(LIBDL_PATH NAMES dl)
-	if(LIBDL_PATH)
-		target_link_libraries(loader ${LIBDL_PATH})
-	endif()
+  find_library(LIBDL_PATH NAMES dl)
+  if(LIBDL_PATH)
+    target_link_libraries(loader ${LIBDL_PATH})
+  endif()
 endif()
 
