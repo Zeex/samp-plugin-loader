@@ -84,4 +84,4 @@ class Plugin {
   Plugin &operator=(const Plugin &other);
 };
 
-#endif // UNLIMIITEDFS_PLUGIN_H
+#endif // !PLUGIN_H
