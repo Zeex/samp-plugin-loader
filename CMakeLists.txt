@@ -2,6 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project(loader)
 
+include_directories(sdk/amx)
+
+if(WIN32)
+  if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  endif()
+endif()
+
+if(UNIX)
+  add_definitions(-DLINUX)
+endif()
+
 set(SOURCES 
   configreader.cpp
   configreader.h
@@ -15,19 +27,11 @@ if(WIN32)
 endif()
 
 add_library(loader MODULE ${SOURCES})
+set_target_properties(loader PROPERTIES PREFIX "")
 
-if(WIN32)
-  if(MSVC)
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  endif()
-else()
-  add_definitions(-DLINUX)
-
-  set_target_properties(loader PROPERTIES PREFIX "")
-
+if(UNIX)
   find_library(LIBDL_PATH NAMES dl)
   if(LIBDL_PATH)
     target_link_libraries(loader ${LIBDL_PATH})
   endif()
 endif()
-
