@@ -88,7 +88,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
       }
     }
 
-    if (!plugin->IsLoaded()) {
+    if (plugin->IsLoaded()) {
+      plugins.push_back(plugin);
+      logprintf("   Loaded.");
+    } else {
       switch (error) {
         case PLUGIN_ERROR_FAILED: {
           std::string msg = plugin->GetFailMessage();
@@ -106,13 +109,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
           logprintf("   Plugin does not conform to acrhitecture.");
           break;
       }
-
       delete plugin;
-      continue;
     }
-
-    plugins.push_back(plugin);
-    logprintf("   Loaded.");
   }
 
   logprintf("  Loaded %d plugins.", plugins.size());

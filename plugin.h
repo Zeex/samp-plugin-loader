@@ -48,7 +48,6 @@ class Plugin {
 
   Plugin();
   explicit Plugin(const std::string &filename);
-  Plugin(const std::string &filename, void **ppData);
   ~Plugin();
 
   PluginError Load(void **ppData);
@@ -57,14 +56,10 @@ class Plugin {
 
   void *GetSymbol(const std::string &name) const;
 
-  bool IsLoaded() const
-    { return loaded_; }
-  operator bool() const
-    { return IsLoaded(); }
+  bool IsLoaded() const { return loaded_; }
+  operator bool() const { return IsLoaded(); }
 
-  std::string GetFailMessage() const {
-    return failmsg_;
-  }
+  std::string GetFailMessage() const { return failmsg_; }
 
   int AmxLoad(AMX *amx) const;
   int AmxUnload(AMX *amx) const;
