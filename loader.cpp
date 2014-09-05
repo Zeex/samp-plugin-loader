@@ -26,6 +26,7 @@
 #include <cstring>
 #include <iterator>
 #include <list>
+#include <new>
 #include <string>
 
 #include "configreader.h"
@@ -72,7 +73,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
       iterator != names_end; ++iterator) {
     logprintf("  Loading plugin: %s", iterator->c_str());
 
-    Plugin *plugin = new Plugin;
+    Plugin *plugin = new(std::nothrow) Plugin;
     if (plugin == 0) {
       continue;
     }
