@@ -65,14 +65,14 @@ PluginError Plugin::Load(void **ppData) {
 
 PluginError Plugin::Load(const std::string &filename, void **ppData) {
   if (!loaded_) {
-    #ifdef WIN32
+    #ifdef _WIN32
       handle_ = (void*)LoadLibrary(filename.c_str());
     #else
       handle_ = dlopen(filename.c_str(), RTLD_NOW);
     #endif
 
     if (handle_ == 0) {
-      #ifdef WIN32
+      #ifdef _WIN32
         DWORD error = GetLastError();
         DWORD flags = FORMAT_MESSAGE_ARGUMENT_ARRAY
                     | FORMAT_MESSAGE_FROM_SYSTEM
